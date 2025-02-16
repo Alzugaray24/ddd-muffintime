@@ -1,4 +1,18 @@
 package com.buildingblocks.challenges.domain.card.events;
 
-public class CardActivated {
+import com.buildingblocks.shared.domain.generic.DomainEvent;
+
+public class CardActivated extends DomainEvent {
+    private final String cardId;
+
+    public CardActivated(String cardId, String activationDetails) {
+        super(EventsEnum.CARD_ACTIVATED.name());
+        this.cardId = cardId;
+
+    }
+
+    public String getCardId() {
+        return cardId;
+    }
+
 }
