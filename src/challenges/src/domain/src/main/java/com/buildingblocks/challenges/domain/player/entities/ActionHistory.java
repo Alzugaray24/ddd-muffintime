@@ -1,30 +1,25 @@
-// Turn.java
 package com.buildingblocks.challenges.domain.player.entities;
 
-import com.buildingblocks.challenges.domain.player.values.IsActive;
-import com.buildingblocks.challenges.domain.player.values.TurnId;
 import com.buildingblocks.challenges.domain.player.values.Action;
+import com.buildingblocks.challenges.domain.player.values.ActionHistoryId;
 import com.buildingblocks.challenges.domain.player.values.Number;
 import com.buildingblocks.shared.domain.generic.Entity;
 
-public class Turn extends Entity<TurnId> {
+public class ActionHistory extends Entity<ActionHistoryId> {
 
     private Action action;
     private Number number;
-    private IsActive isActive;
 
-    public Turn(TurnId identity, Action action, Number number) {
+    public ActionHistory(ActionHistoryId identity, Action action, Number number) {
         super(identity);
         this.action = action;
         this.number = number;
-        this.isActive = IsActive.of(false);
     }
 
-    public Turn(Action action, Number number) {
-        super(new TurnId());
+    public ActionHistory(Action action, Number number) {
+        super(new ActionHistoryId());
         this.action = action;
         this.number = number;
-        this.isActive = IsActive.of(false);
     }
 
     public Action getAction() {
@@ -50,17 +45,5 @@ public class Turn extends Entity<TurnId> {
 
     public int getActionCount() {
         return this.number.getValue();
-    }
-
-    public boolean isActive() {
-        return isActive.getValue();
-    }
-
-    public void startTurn() {
-        this.isActive = IsActive.of(true);
-    }
-
-    public void endTurn() {
-        this.isActive = IsActive.of(false);
     }
 }

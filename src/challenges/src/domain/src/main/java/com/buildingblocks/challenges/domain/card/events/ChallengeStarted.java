@@ -5,7 +5,7 @@ import com.buildingblocks.shared.domain.generic.DomainEvent;
 public class ChallengeStarted extends DomainEvent {
     private final String challengeId;
 
-    public ChallengeStarted(String challengeId, boolean isStarted) {
+    public ChallengeStarted(String challengeId) {
         super(EventsEnum.CHALLENGE_STARTED.name());
         this.challengeId = challengeId;
     }

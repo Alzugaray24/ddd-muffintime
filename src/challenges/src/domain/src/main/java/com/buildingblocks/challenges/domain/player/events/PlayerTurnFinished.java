@@ -6,7 +6,7 @@ public class PlayerTurnFinished extends DomainEvent {
 
     private final String playerId;
 
-    public PlayerTurnFinished( String playerId, String action) {
+    public PlayerTurnFinished( String playerId) {
         super(EventsEnum.PLAYER_TURN_FINISHED.name());
         this.playerId = playerId;
     }
