@@ -1,7 +1,6 @@
 // Card.java
 package com.buildingblocks.challenges.domain.card;
 
-import com.buildingblocks.challenges.domain.card.entities.ActivationCondition;
 import com.buildingblocks.challenges.domain.card.entities.Effect;
 import com.buildingblocks.challenges.domain.card.entities.Reward;
 import com.buildingblocks.challenges.domain.card.events.*;
@@ -9,16 +8,20 @@ import com.buildingblocks.challenges.domain.card.values.CardId;
 import com.buildingblocks.challenges.domain.card.values.Description;
 import com.buildingblocks.challenges.domain.card.values.Title;
 import com.buildingblocks.challenges.domain.card.values.Type;
+import com.buildingblocks.challenges.domain.player.values.IsActive;
 import com.buildingblocks.shared.domain.generic.AggregateRoot;
+import com.buildingblocks.shared.domain.generic.DomainEvent;
+
+import java.util.List;
 
 public class Card extends AggregateRoot<CardId> {
 
     private Title title;
     private Description description;
     private Type type;
-    private ActivationCondition activationCondition;
     private Effect effect;
     private Reward reward;
+    private IsActive active;
 
     // region Constructors
 
@@ -38,6 +41,14 @@ public class Card extends AggregateRoot<CardId> {
         return title;
     }
 
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
     public void setTitle(Title title) {
         this.title = title;
     }
@@ -48,22 +59,6 @@ public class Card extends AggregateRoot<CardId> {
 
     public void setDescription(Description description) {
         this.description = description;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
-
-    public ActivationCondition getActivationCondition() {
-        return activationCondition;
-    }
-
-    public void setActivationCondition(ActivationCondition activationCondition) {
-        this.activationCondition = activationCondition;
     }
 
     public Effect getEffect() {
@@ -82,13 +77,26 @@ public class Card extends AggregateRoot<CardId> {
         this.reward = reward;
     }
 
+    public IsActive getActive() {
+        return active;
+    }
+
+    public void setActive(IsActive active) {
+        this.active = active;
+    }
+
+    public void activate() {
+        this.active = IsActive.of(true);
+    }
+
+    public void deactivate() {
+        this.active = IsActive.of(false);
+    }
+
     // endregion
 
     // region Domain Events
 
-    public void activateCondition (String conditionId, String conditionDetails){
-        apply(new ConditionActivated(conditionId, conditionDetails));
-    }
 
     public void activateCard (String cardId){
         apply(new CardActivated(cardId));
@@ -98,58 +106,33 @@ public class Card extends AggregateRoot<CardId> {
         apply(new CardDeactivated(cardId));
     }
 
-    public void completeChallenge (String challengeId){
-        apply(new ChallengeCompleted(challengeId));
+    public IsActive getId() {
+        return active;
     }
 
-    public void activeEffect(String effectId){
-        apply(new EffectActivated(effectId));
-    }
-
-    public void deactivateEffect(String effectId){
-        apply(new EffectDeactivated(effectId));
-    }
-
-    public void applyReward(String rewardId, String rewardDetails){
-        apply(new RewardAwarded(rewardId, rewardDetails));
-    }
-
-    public void startChallenge (String challengeId){
-        apply(new ChallengeStarted(challengeId));
-    }
 
     // endregion
 
     // region Public methods
 
-    public void playCard() {
-        if (canPlayCard()) {
-            activateCard(this.getIdentity().getValue());
-            activeEffect(this.effect.getIdentity().getValue());
-        } else {
-            throw new IllegalStateException("Cannot play card under current conditions");
-        }
-    }
-
-    public void discardCard() {
-        if (canDiscardCard()) {
-            deactivateCard(this.getIdentity().getValue());
-        } else {
-            throw new IllegalStateException("Cannot discard card under current conditions");
-        }
-    }
 
     // endregion
 
     // region Private methods
 
-    private boolean canPlayCard() {
-        return true;
-    }
-
-    private boolean canDiscardCard() {
-        return true;
-    }
 
     // endregion
+
+    public static Card from(final String identity, final Title title, final Description description, final Type type, final Effect effect, final Reward reward, final IsActive active, final List<DomainEvent> domainEvents) {
+        Card card = new Card(CardId.of(identity));
+        card.setTitle(title);
+        card.setDescription(description);
+        card.setType(type);
+        card.setEffect(effect);
+        card.setReward(reward);
+        card.setActive(active);
+
+        domainEvents.forEach(card::apply);
+        return card;
+    }
 }

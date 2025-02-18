@@ -5,64 +5,87 @@ import com.buildingblocks.shared.domain.generic.Entity;
 
 public class Reward extends Entity<RewardId> {
 
-    private Title title;
     private Description description;
-    private IsActive isActive;
-    private Value value;
+    private TypeReward type;
+    private IsActive active;
+    private Trigger trigger;
 
-    public Reward(RewardId identity, Title title, Description description, IsActive isActive, Value value) {
+
+    public Reward(RewardId identity, Description description, TypeReward type, IsActive active, Trigger trigger) {
         super(identity);
-        this.title = title;
         this.description = description;
-        this.isActive = isActive;
-        this.value = value;
+        this.type = type;
+        this.active = active;
+        this.trigger = trigger;
     }
 
-    public Reward(Title title, Description description, IsActive isActive, Value value) {
+    public Reward(Description description, TypeReward type, IsActive active, Trigger trigger) {
         super(new RewardId());
-        this.title = title;
         this.description = description;
-        this.isActive = isActive;
-        this.value = value;
-    }
-
-    public Title getTitle() {
-        return title;
+        this.type = type;
+        this.active = active;
+        this.trigger = trigger;
     }
 
     public Description getDescription() {
         return description;
     }
 
-    public IsActive getIsActive() {
-        return isActive;
-    }
-
-    public Value getValue() {
-        return value;
-    }
-
-    public void setTitle(Title title) {
-        this.title = title;
-    }
-
     public void setDescription(Description description) {
         this.description = description;
     }
 
-    public void setIsActive(IsActive isActive) {
-        this.isActive = isActive;
+    public TypeReward getType() {
+        return type;
     }
 
-    public void setValue(Value value) {
-        this.value = value;
+    public void setType(TypeReward type) {
+        this.type = type;
     }
 
-    public void activateReward() {
-        this.isActive = IsActive.of(true);
+    public IsActive getActive() {
+        return active;
     }
 
-    public void deactivateReward() {
-        this.isActive = IsActive.of(false);
+    public void setActive(IsActive active) {
+        this.active = active;
     }
+
+    public void activate() {
+        this.active = IsActive.of(true);
+    }
+
+    public void deactivate() {
+        this.active = IsActive.of(false);
+    }
+
+    public Trigger getTrigger() {
+        return trigger;
+    }
+
+    public void setTrigger(Trigger trigger) {
+        this.trigger = trigger;
+    }
+
+    public void giveReward() {
+        if (!active.getValue()) {
+            throw new IllegalStateException("Reward is not active");
+        }
+
+        switch (type) {
+            case CARTA_EXTRA:
+                System.out.println("You have earned an extra card");
+                break;
+            case GANAR_MUFFINS:
+                System.out.println("You have earned " + trigger.getAction() + " muffins");
+                break;
+            case VICTORIA_INSTANTANEA:
+                System.out.println("You have won instantly");
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid reward type");
+        }
+    }
+
+
 }

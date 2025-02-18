@@ -3,18 +3,17 @@ package com.buildingblocks.challenges.domain.player;
 import com.buildingblocks.challenges.domain.card.Card;
 import com.buildingblocks.challenges.domain.player.entities.ActionHistory;
 import com.buildingblocks.challenges.domain.player.entities.Turn;
-import com.buildingblocks.challenges.domain.player.events.HistoryUpdated;
-import com.buildingblocks.challenges.domain.player.events.PlayerTurnFinished;
-import com.buildingblocks.challenges.domain.player.events.PlayerTurnStarted;
+import com.buildingblocks.challenges.domain.player.events.*;
 import com.buildingblocks.challenges.domain.player.values.*;
 import com.buildingblocks.shared.domain.generic.AggregateRoot;
+import com.buildingblocks.shared.domain.generic.DomainEvent;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Player extends AggregateRoot<PlayerId> {
 
-    private FirstName firstName;
-    private LastName lastName;
+    private NickName nickName;
     private State state;
     private Turn turn;
     private ActionHistory actionHistory;
@@ -34,20 +33,12 @@ public class Player extends AggregateRoot<PlayerId> {
 
     // region Getters and Setters
 
-    public FirstName getFirstName() {
-        return firstName;
+    public NickName getNickName() {
+        return nickName;
     }
 
-    public void setFirstName(FirstName firstName) {
-        this.firstName = firstName;
-    }
-
-    public LastName getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(LastName lastName) {
-        this.lastName = lastName;
+    public void setNickName(NickName nickName) {
+        this.nickName = nickName;
     }
 
     public State getState() {
@@ -87,57 +78,77 @@ public class Player extends AggregateRoot<PlayerId> {
 
     // region Domain Events
 
-    public void updateHistory (String historyId, String action){
-        apply(new HistoryUpdated(historyId, action));
+    public void createPlayer(String playerId, String nickName){
+        apply(new PlayerCreated(playerId, nickName));
     }
 
-    public void startTurn(String playerId){
-        apply(new PlayerTurnStarted(playerId));
+    public void recordAction(String playerId, Action action){
+       apply(new PlayerActionRecorded(playerId, action));
     }
 
-    public void endTurn(String playerId){
-        apply(new PlayerTurnFinished(playerId));
+    public  void cardDrawn(String playerId, Card cardId){
+        apply(new CardDrawn(playerId, cardId));
     }
 
+    public  void playCard (String playerId, Card cardId){
+        apply(new CardPlayed(playerId, cardId));
+    }
 
+    public void changeState(String playerId, State state){
+        apply(new PlayerStateChanged(playerId, state));
+    }
 
     // endregion
 
     // region Public methods
 
-    public void registerTurn(Turn turn) {
-        try {
-            validateTurn(turn);
-            this.turn = turn;
-            startTurn(this.getIdentity().getValue());
-        } catch (IllegalArgumentException e) {
-            endTurn(this.getIdentity().getValue());
-        }
-    }
-
-    public void throwCard(Card card) {
-        if (cards.contains(card)) {
-            cards.remove(card);
-            updateHistory(this.getIdentity().getValue(), "Card thrown: " + card.getTitle().toString());
+    public void drawCard(Card card) {
+        if (Objects.equals(state.getStatus().toString(), "ACTIVE")) {
+            if (Boolean.TRUE.equals(canDrawCard())) {
+                cards.add(card);
+            } else {
+                throw new IllegalStateException("Cannot draw card");
+            }
         } else {
-            throw new IllegalArgumentException("Card not found in player's hand");
+            throw new IllegalStateException("Player is not active");
         }
     }
 
-    public void takeCard(Card card) {
-        cards.add(card);
-        updateHistory(this.getIdentity().getValue(), "Card taken: " + card.getTitle().toString());
+    public void playCard(Card card) {
+        if (Objects.equals(state.getStatus().toString(), "ACTIVE")) {
+            if (Boolean.TRUE.equals(canPlayCard())) {
+                cards.remove(card);
+            } else {
+                throw new IllegalStateException("Cannot play card");
+            }
+        } else {
+            throw new IllegalStateException("Player is not active");
+        }
     }
 
     // endregion
 
     // region Private methods
 
-    private void validateTurn(Turn turn) {
-        if (turn == null) {
-            throw new IllegalArgumentException("Turn cannot be null");
-        }
+    private Boolean canPlayCard() {
+        return turn.isActive();
+    }
+
+    private Boolean canDrawCard() {
+        return turn.isActive();
     }
 
     // endregion
+
+    public static Player from(final String identity, final NickName nickName, final State state, final Turn turn, final ActionHistory actionHistory, final List<Card> cards, final List<DomainEvent> domainEvents) {
+        Player player = new Player(PlayerId.of(identity));
+        player.setNickName(nickName);
+        player.setState(state);
+        player.setTurn(turn);
+        player.setActionHistory(actionHistory);
+        player.setCards(cards);
+
+        domainEvents.forEach(player::apply);
+        return player;
+    }
 }

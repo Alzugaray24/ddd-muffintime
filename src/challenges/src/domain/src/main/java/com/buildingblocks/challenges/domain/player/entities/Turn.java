@@ -57,10 +57,16 @@ public class Turn extends Entity<TurnId> {
     }
 
     public void startTurn() {
+        if (isActive.getValue()) {
+            throw new IllegalStateException("Turn is already active");
+        }
         this.isActive = IsActive.of(true);
     }
 
     public void endTurn() {
+        if (!isActive.getValue()) {
+            throw new IllegalStateException("Turn is already inactive");
+        }
         this.isActive = IsActive.of(false);
     }
 }

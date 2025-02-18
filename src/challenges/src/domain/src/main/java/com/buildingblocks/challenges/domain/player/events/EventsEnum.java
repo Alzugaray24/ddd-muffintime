@@ -1,7 +1,9 @@
 package com.buildingblocks.challenges.domain.player.events;
 
 public enum EventsEnum {
-    HISTORY_UPDATED,
-    PLAYER_TURN_FINISHED,
-    PLAYER_TURN_STARTED,
+   PLAYER_CARD_DRAWN,
+    PLAYER_CARD_PLAYED,
+    PLAYER_STATE_CHANGED,
+    PLAYER_CREATED,
+    PLAYER_ACTION_RECORDED
 }

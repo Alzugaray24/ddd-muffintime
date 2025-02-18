@@ -2,11 +2,11 @@ package com.buildingblocks.challenges.domain.card.events;
 
 import com.buildingblocks.shared.domain.generic.DomainEvent;
 
-public class ChallengeStarted extends DomainEvent {
+public class EffectCompleted extends DomainEvent {
     private final String challengeId;
 
-    public ChallengeStarted(String challengeId) {
-        super(EventsEnum.CHALLENGE_STARTED.name());
+    public EffectCompleted(String challengeId) {
+        super(EventsEnum.EFFECT_COMPLETED.name());
         this.challengeId = challengeId;
     }
 

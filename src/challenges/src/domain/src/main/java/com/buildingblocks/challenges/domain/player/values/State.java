@@ -5,23 +5,25 @@ import com.buildingblocks.shared.domain.utils.ValidationUtils;
 
 public class State implements IValueObject {
 
-    private final String status;
+    private final StateEnum status;
 
-    private State(String status) {
+    private State(StateEnum status) {
         validate();
         this.status = status;
     }
 
-    public static State of(String status) {
+    public static State of(StateEnum status) {
         return new State(status);
     }
 
     @Override
     public void validate() {
-        ValidationUtils.validateTextNotEmpty(status, "State status cannot be empty");
+        ValidationUtils.validateTextNotEmpty(status.name(), "State cannot be null");
     }
 
-    public String getStatus() {
+    public StateEnum getStatus() {
         return status;
     }
+
+
 }

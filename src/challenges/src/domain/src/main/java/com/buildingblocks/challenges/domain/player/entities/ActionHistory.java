@@ -38,7 +38,7 @@ public class ActionHistory extends Entity<ActionHistoryId> {
         this.number = number;
     }
 
-    public void recordAction(Action action) {
+    public void updateAction(Action action) {
         this.action = action;
         this.number = Number.of(this.number.getValue() + 1);
     }
