@@ -1,29 +1,28 @@
+// NickName.java
 package com.buildingblocks.challenges.domain.player.values;
-
 
 import com.buildingblocks.shared.domain.generic.IValueObject;
 import com.buildingblocks.shared.domain.utils.ValidationUtils;
 
 public class NickName implements IValueObject {
 
-    private final String name;
+    private final String value;
 
-    private NickName(String name) {
+    private NickName(String value) {
+        this.value = value;
         validate();
-        this.name = name;
     }
 
-    public static NickName of(String name) {
-        return new NickName(name);
+    public static NickName of(String value) {
+        return new NickName(value);
     }
 
     @Override
     public void validate() {
-        ValidationUtils.validateTextNotEmpty(name, "Action name cannot be empty");
+        ValidationUtils.validateTextNotEmpty(this.value, "Nickname cannot be empty");
     }
 
-    public String getName() {
-        return name;
+    public String getValue() {
+        return value;
     }
-
 }

@@ -1,3 +1,4 @@
+// Player.java
 package com.buildingblocks.challenges.domain.player;
 
 import com.buildingblocks.challenges.domain.card.Card;
@@ -8,8 +9,8 @@ import com.buildingblocks.challenges.domain.player.values.*;
 import com.buildingblocks.shared.domain.generic.AggregateRoot;
 import com.buildingblocks.shared.domain.generic.DomainEvent;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Player extends AggregateRoot<PlayerId> {
 
@@ -17,16 +18,18 @@ public class Player extends AggregateRoot<PlayerId> {
     private State state;
     private Turn turn;
     private ActionHistory actionHistory;
-    private List<Card> cards;
+    private List<Card> cards = new ArrayList<>();
 
     // region Constructors
 
     public Player(){
         super(new PlayerId());
+        subscribe(new PlayerHandler(this));
     }
 
     private Player(PlayerId identity){
         super(identity);
+        subscribe(new PlayerHandler(this));
     }
 
     // endregion
@@ -70,61 +73,35 @@ public class Player extends AggregateRoot<PlayerId> {
     }
 
     public void setCards(List<Card> cards) {
-        this.cards = cards;
+        this.cards = new ArrayList<>(cards);
     }
-
-
     // endregion
 
     // region Domain Events
 
-    public void createPlayer(String playerId, String nickName){
-        apply(new PlayerCreated(playerId, nickName));
+    public void createPlayer(String nickName){
+        apply(new PlayerCreated(nickName));
     }
 
-    public void recordAction(String playerId, Action action){
-       apply(new PlayerActionRecorded(playerId, action));
+    public void recordAction(Action action){
+        apply(new PlayerActionRecorded(action));
     }
 
-    public  void cardDrawn(String playerId, Card cardId){
-        apply(new CardDrawn(playerId, cardId));
+    public void drawnCard(Card cardId){
+        apply(new CardDrawn(cardId));
     }
 
-    public  void playCard (String playerId, Card cardId){
-        apply(new CardPlayed(playerId, cardId));
+    public void playCard(Card cardId){
+        apply(new CardPlayed(cardId));
     }
 
-    public void changeState(String playerId, State state){
-        apply(new PlayerStateChanged(playerId, state));
+    public void changeState(State state){
+        apply(new PlayerStateChanged(state));
     }
 
     // endregion
 
     // region Public methods
-
-    public void drawCard(Card card) {
-        if (Objects.equals(state.getStatus().toString(), "ACTIVE")) {
-            if (Boolean.TRUE.equals(canDrawCard())) {
-                cards.add(card);
-            } else {
-                throw new IllegalStateException("Cannot draw card");
-            }
-        } else {
-            throw new IllegalStateException("Player is not active");
-        }
-    }
-
-    public void playCard(Card card) {
-        if (Objects.equals(state.getStatus().toString(), "ACTIVE")) {
-            if (Boolean.TRUE.equals(canPlayCard())) {
-                cards.remove(card);
-            } else {
-                throw new IllegalStateException("Cannot play card");
-            }
-        } else {
-            throw new IllegalStateException("Player is not active");
-        }
-    }
 
     // endregion
 
@@ -140,15 +117,9 @@ public class Player extends AggregateRoot<PlayerId> {
 
     // endregion
 
-    public static Player from(final String identity, final NickName nickName, final State state, final Turn turn, final ActionHistory actionHistory, final List<Card> cards, final List<DomainEvent> domainEvents) {
+    public static Player from(final String identity, final List<DomainEvent> events) {
         Player player = new Player(PlayerId.of(identity));
-        player.setNickName(nickName);
-        player.setState(state);
-        player.setTurn(turn);
-        player.setActionHistory(actionHistory);
-        player.setCards(cards);
-
-        domainEvents.forEach(player::apply);
+        events.forEach(player::apply);
         return player;
     }
 }

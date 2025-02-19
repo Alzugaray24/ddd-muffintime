@@ -1,9 +1,12 @@
 // PlayerHandler.java
 package com.buildingblocks.challenges.domain.player;
 
-import com.buildingblocks.challenges.domain.player.events.*;
+import com.buildingblocks.challenges.domain.player.events.CardDrawn;
+import com.buildingblocks.challenges.domain.player.events.CardPlayed;
+import com.buildingblocks.challenges.domain.player.events.PlayerCreated;
+import com.buildingblocks.challenges.domain.player.events.PlayerStateChanged;
 import com.buildingblocks.challenges.domain.player.values.NickName;
-import com.buildingblocks.challenges.domain.player.values.Number;
+import com.buildingblocks.challenges.domain.player.values.StateEnum;
 import com.buildingblocks.shared.domain.generic.DomainActionsContainer;
 import com.buildingblocks.shared.domain.generic.DomainEvent;
 
@@ -11,55 +14,50 @@ import java.util.function.Consumer;
 
 public class PlayerHandler extends DomainActionsContainer {
 
-    private final Player player;
-
     public PlayerHandler(Player player) {
-        this.player = player;
+        add(createPlayer(player));
+        add(changePlayerState(player));
+        add(playCard(player));
+        add(drawCard(player));
     }
 
-    public Consumer<? extends DomainEvent> createPlayer() {
-        return (PlayerCreated event) -> {
-                player.setNickName(NickName.of(event.getNickName()));
-                player.getActionHistory().setNumber(Number.of(0));
-        };
-    }
-
-    public Consumer<? extends DomainEvent> playCard() {
-        return (CardPlayed event) -> {
-            if(player.getTurn().isActive()){
-                player.playCard(event.getCardId());
-            }else {
-                throw new IllegalArgumentException("Player cannot play card because it is not his turn");
+    private Consumer<? super DomainEvent> createPlayer(Player player) {
+        return (DomainEvent event) -> {
+            if (event instanceof PlayerCreated playerCreated) {
+                player.setNickName(NickName.of(playerCreated.getNickName()));
             }
         };
     }
 
-    public Consumer<? extends DomainEvent> drawnCard() {
-        return (CardDrawn event) -> {
-            if (player.getIdentity().getValue().equals(event.getPlayerId())) {
-                player.drawCard(event.getCardId());
-            } else {
-                throw new IllegalArgumentException("Player cannot draw card because it is not his turn");
+    private Consumer<? super DomainEvent> changePlayerState(Player player) {
+        return (DomainEvent event) -> {
+            if (event instanceof PlayerStateChanged playerStateChanged) {
+                player.setState(playerStateChanged.getNewState());
             }
         };
     }
 
-
-    public Consumer<? extends DomainEvent> changeState() {
-        return (PlayerStateChanged event) -> {
-            if (player.getState().equals(event.getNewState())) {
-                throw new IllegalArgumentException("Player already in that state");
-            } else {
-                player.setState(event.getNewState());
+    private Consumer<? super DomainEvent> playCard(Player player) {
+        return (DomainEvent event) -> {
+            if (event instanceof CardPlayed cardPlayed) {
+                if (player.getState().getValue() == StateEnum.INACTIVE) {
+                    throw new IllegalStateException("Player is inactive");
+                } else {
+                    player.getCards().remove(cardPlayed.getCardId());
+                }
             }
         };
-
-
     }
 
-    public Consumer<? extends DomainEvent> recordPlayerAction() {
-        return (PlayerActionRecorded event) -> player.getActionHistory().updateAction(event.getAction());
+    private Consumer<? super DomainEvent> drawCard(Player player) {
+        return (DomainEvent event) -> {
+            if (event instanceof CardDrawn cardDrawn) {
+                if (player.getState().getValue() == StateEnum.INACTIVE) {
+                    throw new IllegalStateException("Player is inactive");
+                } else {
+                    player.getCards().add(cardDrawn.getCardId());
+                }
+            }
+        };
     }
-
-
 }

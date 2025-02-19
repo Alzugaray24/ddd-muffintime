@@ -1,3 +1,4 @@
+// State.java
 package com.buildingblocks.challenges.domain.player.values;
 
 import com.buildingblocks.shared.domain.generic.IValueObject;
@@ -5,25 +6,24 @@ import com.buildingblocks.shared.domain.utils.ValidationUtils;
 
 public class State implements IValueObject {
 
-    private final StateEnum status;
+    private final StateEnum value;
 
-    private State(StateEnum status) {
+    private State(StateEnum value) {
+        this.value = value;
         validate();
-        this.status = status;
     }
 
-    public static State of(StateEnum status) {
-        return new State(status);
+    public static State of(StateEnum value) {
+        return new State(value);
     }
 
     @Override
     public void validate() {
-        ValidationUtils.validateTextNotEmpty(status.name(), "State cannot be null");
+        System.out.println("StateEnum: " + value);
+        ValidationUtils.validateBoolean(value != null, "State cannot be null");
     }
 
-    public StateEnum getStatus() {
-        return status;
+    public StateEnum getValue() {
+        return value;
     }
-
-
 }
