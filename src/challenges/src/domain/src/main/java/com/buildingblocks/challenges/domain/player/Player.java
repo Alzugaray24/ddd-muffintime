@@ -16,8 +16,6 @@ public class Player extends AggregateRoot<PlayerId> {
 
     private NickName nickName;
     private State state;
-    private Turn turn;
-    private ActionHistory actionHistory;
     private List<Card> cards = new ArrayList<>();
 
     // region Constructors
@@ -52,21 +50,6 @@ public class Player extends AggregateRoot<PlayerId> {
         this.state = state;
     }
 
-    public Turn getTurn() {
-        return turn;
-    }
-
-    public void setTurn(Turn turn) {
-        this.turn = turn;
-    }
-
-    public ActionHistory getActionHistory() {
-        return actionHistory;
-    }
-
-    public void setActionHistory(ActionHistory actionHistory) {
-        this.actionHistory = actionHistory;
-    }
 
     public List<Card> getCards() {
         return cards;
@@ -81,10 +64,6 @@ public class Player extends AggregateRoot<PlayerId> {
 
     public void createPlayer(String nickName){
         apply(new PlayerCreated(nickName));
-    }
-
-    public void recordAction(Action action){
-        apply(new PlayerActionRecorded(action));
     }
 
     public void drawnCard(Card cardId){
@@ -106,14 +85,6 @@ public class Player extends AggregateRoot<PlayerId> {
     // endregion
 
     // region Private methods
-
-    private Boolean canPlayCard() {
-        return turn.isActive();
-    }
-
-    private Boolean canDrawCard() {
-        return turn.isActive();
-    }
 
     // endregion
 
