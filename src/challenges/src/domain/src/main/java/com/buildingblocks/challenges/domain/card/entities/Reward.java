@@ -77,7 +77,7 @@ public class Reward extends Entity<RewardId> {
                 System.out.println("You have earned an extra card");
                 break;
             case GANAR_MUFFINS:
-                System.out.println("You have earned " + trigger.getAction() + " muffins");
+                System.out.println("You have earned " + trigger.getValue() + " muffins");
                 break;
             case VICTORIA_INSTANTANEA:
                 System.out.println("You have won instantly");

@@ -5,23 +5,23 @@ import com.buildingblocks.shared.domain.utils.ValidationUtils;
 
 public class Title implements IValueObject {
 
-    private final String text;
+    private final String value;
 
-    private Title(String text) {
+    private Title(String value) {
+        this.value = value;
         validate();
-        this.text = text;
     }
 
-    public static Title of(String text) {
-        return new Title(text);
+    public static Title of(String value) {
+        return new Title(value);
     }
 
     @Override
     public void validate() {
-        ValidationUtils.validateTextNotEmpty(text, "Title text cannot be empty");
+        ValidationUtils.validateTextNotEmpty(value, "Title text cannot be empty");
     }
 
-    public String getText() {
-        return text;
+    public String getValue() {
+        return value;
     }
 }

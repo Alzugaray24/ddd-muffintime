@@ -5,9 +5,6 @@ import com.buildingblocks.challenges.domain.card.values.*;
 import com.buildingblocks.challenges.domain.player.values.IsActive;
 import com.buildingblocks.shared.domain.generic.Entity;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class Effect extends Entity<EffectId> {
 
@@ -73,55 +70,5 @@ public class Effect extends Entity<EffectId> {
 
     public void setActive(IsActive active) {
         this.active = active;
-    }
-
-    public void activate() {
-        if (active.getValue()) {
-            throw new IllegalArgumentException("Effect already active");
-        } else {
-            if (duration.getValue() > 0) {
-                active = IsActive.of(true);
-                applyEffect();
-                scheduleDeactivation();
-            } else {
-                throw new IllegalArgumentException("Effect duration is 0");
-            }
-        }
-    }
-
-    private void applyEffect() {
-        switch (type) {
-            case ROBAR_CARTAS:
-                System.out.println("Applying effect: Draw cards");
-                break;
-            case BLOQUEAR_JUGADOR:
-                System.out.println("Applying effect: Block player");
-                break;
-            case INTERCAMBIAR_MUFFINS:
-                System.out.println("Applying effect: Exchange muffins");
-                break;
-            case ACTIVAR_ABSURDO:
-                System.out.println("Applying effect: Activate absurd");
-                break;
-            case TRAMPA:
-                System.out.println("Applying effect: Trap");
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid effect type");
-        }
-    }
-
-    private void scheduleDeactivation() {
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        long durationMillis = duration.getValue();
-        scheduler.schedule(this::deactivate, durationMillis, TimeUnit.MILLISECONDS);
-    }
-
-    public void deactivate() {
-        if (!active.getValue()) {
-            throw new IllegalArgumentException("Effect already deactivated");
-        } else {
-            active = IsActive.of(false);
-        }
     }
 }

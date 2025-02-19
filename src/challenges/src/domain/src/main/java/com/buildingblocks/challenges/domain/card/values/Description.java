@@ -5,31 +5,24 @@ import com.buildingblocks.shared.domain.utils.ValidationUtils;
 
 public class Description implements IValueObject {
 
-    private final String text;
-    private final String flavorText;
+    private final String value;
 
-    private Description(String text, String flavorText) {
+    private Description(String value) {
+        this.value = value;
         validate();
-        this.text = text;
-        this.flavorText = flavorText;
     }
 
-    public static Description of(String text, String flavorText) {
-        return new Description(text, flavorText);
+    public static Description of(String value) {
+        return new Description(value);
     }
 
 
     @Override
     public void validate() {
-        ValidationUtils.validateTextNotEmpty(text, "Description text cannot be empty");
-        ValidationUtils.validateTextNotEmpty(flavorText, "Description flavor text cannot be empty");
+        ValidationUtils.validateTextNotEmpty(value, "Description text cannot be empty");
     }
 
-    public String getText() {
-        return text;
-    }
-
-    public String getFlavorText() {
-        return flavorText;
+    public String getValue() {
+        return value;
     }
 }

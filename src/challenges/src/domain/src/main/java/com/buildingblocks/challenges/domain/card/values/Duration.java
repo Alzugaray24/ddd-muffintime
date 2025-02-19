@@ -3,8 +3,6 @@ package com.buildingblocks.challenges.domain.card.values;
 import com.buildingblocks.shared.domain.generic.IValueObject;
 import com.buildingblocks.shared.domain.utils.ValidationUtils;
 
-import java.util.Arrays;
-import java.util.List;
 
 public class Duration implements IValueObject {
 
@@ -21,23 +19,10 @@ public class Duration implements IValueObject {
 
     @Override
     public void validate() {
-        ValidationUtils.validateNumberNotNegative(value, "La duración no puede estar vacía.");
+        ValidationUtils.validateNumberNotNegative(value, "Duration value cannot be negative");
     }
 
     public Integer getValue() {
         return value;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Duration duration = (Duration) o;
-        return value.equals(duration.value);
-    }
-
-    @Override
-    public int hashCode() {
-        return value.hashCode();
     }
 }

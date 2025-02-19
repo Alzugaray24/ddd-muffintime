@@ -5,30 +5,25 @@ import com.buildingblocks.shared.domain.utils.ValidationUtils;
 
 public class Trigger implements IValueObject {
 
-    private final String condition;
-    private final String action;
+    private final String value;
 
-    private Trigger(String condition, String action) {
+    private Trigger(String value) {
+        this.value = value;
         validate();
-        this.condition = condition;
-        this.action = action;
+
     }
 
-    public static Trigger of(String condition, String action) {
-        return new Trigger(condition, action);
+    public static Trigger of(String value) {
+        return new Trigger(value);
     }
 
     @Override
     public void validate() {
-        ValidationUtils.validateTextNotEmpty(condition, "Trigger condition cannot be empty");
-        ValidationUtils.validateTextNotEmpty(action, "Trigger action cannot be empty");
+        ValidationUtils.validateTextNotEmpty(value, "Trigger condition cannot be empty");
+
     }
 
-    public String getCondition() {
-        return condition;
-    }
-
-    public String getAction() {
-        return action;
+    public String getValue() {
+        return value;
     }
 }

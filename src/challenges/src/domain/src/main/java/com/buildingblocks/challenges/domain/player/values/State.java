@@ -19,7 +19,6 @@ public class State implements IValueObject {
 
     @Override
     public void validate() {
-        System.out.println("StateEnum: " + value);
         ValidationUtils.validateBoolean(value != null, "State cannot be null");
     }
 
