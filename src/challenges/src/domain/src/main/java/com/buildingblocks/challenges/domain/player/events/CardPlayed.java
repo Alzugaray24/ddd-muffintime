@@ -1,18 +1,23 @@
 // PlayerCardPlayed.java
 package com.buildingblocks.challenges.domain.player.events;
 
-import com.buildingblocks.challenges.domain.card.Card;
 import com.buildingblocks.shared.domain.generic.DomainEvent;
 
 public class CardPlayed extends DomainEvent {
-    private final Card cardId;
+    private final String cardId;
+    private final String action;
 
-    public CardPlayed(Card cardId) {
+    public CardPlayed(String cardId, String action) {
         super(EventsEnum.PLAYER_CARD_PLAYED.name());
         this.cardId = cardId;
+        this.action = action;
     }
 
-    public Card getCardId() {
+    public String getCardId() {
         return cardId;
+    }
+
+    public String getAction() {
+        return action;
     }
 }

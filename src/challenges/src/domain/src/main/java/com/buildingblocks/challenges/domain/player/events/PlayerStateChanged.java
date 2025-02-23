@@ -5,14 +5,14 @@ import com.buildingblocks.challenges.domain.player.values.State;
 import com.buildingblocks.shared.domain.generic.DomainEvent;
 
 public class PlayerStateChanged extends DomainEvent {
-    private final State newState;
+    private final String newState;
 
-    public PlayerStateChanged(State newState) {
+    public PlayerStateChanged(String newState) {
         super(EventsEnum.PLAYER_STATE_CHANGED.name());
         this.newState = newState;
     }
 
-    public State getNewState() {
+    public String getNewState() {
         return newState;
     }
 }

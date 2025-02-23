@@ -7,66 +7,68 @@ import com.buildingblocks.challenges.domain.player.values.Action;
 import com.buildingblocks.challenges.domain.player.values.Number;
 import com.buildingblocks.shared.domain.generic.Entity;
 
+import java.time.LocalTime;
+
 public class Turn extends Entity<TurnId> {
 
-    private Action action;
-    private Number number;
     private IsActive isActive;
+    private LocalTime startTime;
+    private LocalTime endTime;
 
-    public Turn(TurnId identity, Action action, Number number) {
+    public Turn(TurnId identity, LocalTime startTime, LocalTime endTime) {
         super(identity);
-        this.action = action;
-        this.number = number;
-        this.isActive = IsActive.of(false);
-    }
-
-    public Turn(Action action, Number number) {
-        super(new TurnId());
-        this.action = action;
-        this.number = number;
-        this.isActive = IsActive.of(false);
-    }
-
-    public Action getAction() {
-        return action;
-    }
-
-    public Number getNumber() {
-        return number;
-    }
-
-    public void setAction(Action action) {
-        this.action = action;
-    }
-
-    public void setNumber(Number number) {
-        this.number = number;
-    }
-
-    public void recordAction(Action action) {
-        this.action = action;
-        this.number = Number.of(this.number.getValue() + 1);
-    }
-
-    public int getActionCount() {
-        return this.number.getValue();
-    }
-
-    public boolean isActive() {
-        return isActive.getValue();
-    }
-
-    public void startTurn() {
-        if (isActive.getValue()) {
-            throw new IllegalStateException("Turn is already active");
-        }
+        this.startTime = startTime;
+        this.endTime = endTime;
         this.isActive = IsActive.of(true);
     }
 
-    public void endTurn() {
-        if (!isActive.getValue()) {
-            throw new IllegalStateException("Turn is already inactive");
-        }
+    public Turn(LocalTime startTime, LocalTime endTime) {
+        super(new TurnId());
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.isActive = IsActive.of(true);
+    }
+
+    public IsActive getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(IsActive isActive) {
+        this.isActive = isActive;
+    }
+
+    public LocalTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public void finalizeTurn() {
+        this.endTime = LocalTime.now();
         this.isActive = IsActive.of(false);
     }
+
+    public void startTurn() {
+        this.startTime = LocalTime.now();
+        this.isActive = IsActive.of(true);
+    }
+
+    public long getTurnDuration() {
+        if (startTime == null || endTime == null) {
+            return 0;
+        }
+        return java.time.Duration.between(startTime, endTime).getSeconds();
+    }
+
+
 }

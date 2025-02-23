@@ -1,7 +1,12 @@
 rootProject.name = 'ddd-muffintime'
 
 include ':shared:domain'
+include ':shared:application'
 include ':challenges:domain'
+include ':challenges:application'
 
 project(':shared:domain').projectDir = file('src/shared/src/domain')
+project(':shared:application').projectDir = file('src/shared/src/application')
 project(':challenges:domain').projectDir = file('src/challenges/src/domain')
+project(':challenges:application').projectDir = file('src/challenges/src/application')
+

@@ -2,48 +2,65 @@ package com.buildingblocks.challenges.domain.player.entities;
 
 import com.buildingblocks.challenges.domain.player.values.Action;
 import com.buildingblocks.challenges.domain.player.values.ActionHistoryId;
-import com.buildingblocks.challenges.domain.player.values.Number;
 import com.buildingblocks.shared.domain.generic.Entity;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 public class ActionHistory extends Entity<ActionHistoryId> {
 
-    private Action action;
-    private Number number;
+    private List<Action> actions;
+    private LocalDateTime createdAt;
 
-    public ActionHistory(ActionHistoryId identity, Action action, Number number) {
+
+    public ActionHistory(ActionHistoryId identity, List<Action> actions, LocalDateTime createdAt) {
         super(identity);
-        this.action = action;
-        this.number = number;
+        this.actions = actions;
+        this.createdAt = createdAt;
     }
 
-    public ActionHistory(Action action, Number number) {
+    public ActionHistory(List<Action> actions, LocalDateTime createdAt) {
         super(new ActionHistoryId());
-        this.action = action;
-        this.number = number;
+        this.actions = actions;
+        this.createdAt = createdAt;
     }
 
-    public Action getAction() {
-        return action;
+    public List<Action> getActions() {
+        return actions;
     }
 
-    public Number getNumber() {
-        return number;
+    public void setActions(List<Action> actions) {
+        this.actions = actions;
     }
 
-    public void setAction(Action action) {
-        this.action = action;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setNumber(Number number) {
-        this.number = number;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public void updateAction(Action action) {
-        this.action = action;
-        this.number = Number.of(this.number.getValue() + 1);
+    public void addAction(Action action) {
+        if (action == null) {
+            throw new IllegalArgumentException("La acción no puede ser nula.");
+        }
+        this.actions.add(action);
     }
 
-    public int getActionCount() {
-        return this.number.getValue();
+    public Action getLastAction() {
+        if (actions.isEmpty()) {
+            return null;
+        }
+        return actions.get(actions.size() - 1);
     }
+
+    public boolean hasActions() {
+        return !this.actions.isEmpty();
+    }
+
+    public int getTotalActions() {
+        return this.actions.size();
+    }
+
 }

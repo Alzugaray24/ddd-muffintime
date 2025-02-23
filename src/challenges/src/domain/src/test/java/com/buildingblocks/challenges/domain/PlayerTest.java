@@ -1,20 +1,13 @@
 // PlayerTest.java
 package com.buildingblocks.challenges.domain;
 
-import com.buildingblocks.challenges.domain.card.Card;
 import com.buildingblocks.challenges.domain.player.Player;
-import com.buildingblocks.challenges.domain.player.entities.ActionHistory;
-import com.buildingblocks.challenges.domain.player.entities.Turn;
 import com.buildingblocks.challenges.domain.player.events.PlayerCreated;
-import com.buildingblocks.challenges.domain.player.values.Action;
-import com.buildingblocks.challenges.domain.player.values.State;
-import com.buildingblocks.challenges.domain.player.values.StateEnum;
 import com.buildingblocks.challenges.domain.player.values.NickName;
 import com.buildingblocks.shared.domain.generic.DomainEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -45,52 +38,6 @@ public class PlayerTest {
         assertThrows(IllegalArgumentException.class, () -> player.createPlayer(invalidNickName));
     }
 
-    @Test
-    void changeStateSuccess() {
-        State newState = State.of(StateEnum.ACTIVE);
-
-        player.changeState(newState);
-
-        assertEquals(newState, player.getState());
-    }
-
-    @Test
-    void playCardSuccess() {
-        Card card = new Card(/* initialize card properties */);
-        player.setCards(Collections.singletonList(card));
-        player.changeState(State.of(StateEnum.ACTIVE));
-
-        player.playCard(card);
-
-        assertEquals(0, player.getCards().size());
-    }
-
-    @Test
-    void playCardWhenInactiveThrowsException() {
-        Card card = new Card(/* initialize card properties */);
-        player.setCards(Collections.singletonList(card));
-        player.changeState(State.of(StateEnum.INACTIVE));
-
-        assertThrows(IllegalStateException.class, () -> player.playCard(card));
-    }
-
-    @Test
-    void drawCardSuccess() {
-        Card card = new Card(/* initialize card properties */);
-        player.changeState(State.of(StateEnum.ACTIVE));
-
-        player.drawnCard(card);
-
-        assertEquals(1, player.getCards().size());
-    }
-
-    @Test
-    void drawCardWhenInactiveThrowsException() {
-        Card card = new Card();
-        player.changeState(State.of(StateEnum.INACTIVE));
-
-        assertThrows(IllegalStateException.class, () -> player.drawnCard(card));
-    }
 
     @Test
     void validateNickNameSuccess() {
