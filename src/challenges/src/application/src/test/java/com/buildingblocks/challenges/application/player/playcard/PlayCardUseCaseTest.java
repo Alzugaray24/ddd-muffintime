@@ -1,8 +1,6 @@
 // PlayCardUseCaseTest.java
-package com.buildingblocks.challenges.application.playcard;
+package com.buildingblocks.challenges.application.player.playcard;
 
-import com.buildingblocks.challenges.application.player.playcard.PlayCardRequest;
-import com.buildingblocks.challenges.application.player.playcard.PlayCardUseCase;
 import com.buildingblocks.challenges.application.shared.IEventRepository;
 import com.buildingblocks.challenges.application.shared.PlayerResponse;
 import com.buildingblocks.challenges.domain.player.events.CardPlayed;

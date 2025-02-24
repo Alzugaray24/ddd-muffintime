@@ -1,4 +1,4 @@
-package com.buildingblocks.challenges.application.createplayer;
+package com.buildingblocks.challenges.application.player.createplayer;
 
 import com.buildingblocks.challenges.application.player.createplayer.CreatePlayerRequest;
 import com.buildingblocks.challenges.application.player.createplayer.CreatePlayerUseCase;

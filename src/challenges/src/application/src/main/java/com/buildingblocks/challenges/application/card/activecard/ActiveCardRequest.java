@@ -1,4 +1,17 @@
 package com.buildingblocks.challenges.application.card.activecard;
 
-public class ActiveCardRequest {
+import com.buildingblocks.shared.application.Request;
+
+public class ActiveCardRequest extends Request {
+
+    private final String cardId;
+
+    public ActiveCardRequest(String aggregateId, String cardId) {
+        super(aggregateId);
+        this.cardId = cardId;
+    }
+
+    public String getCardId() {
+        return cardId;
+    }
 }

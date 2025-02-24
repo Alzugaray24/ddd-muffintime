@@ -2,8 +2,6 @@ package com.buildingblocks.challenges.application.player.playcard;
 
 import com.buildingblocks.shared.application.Request;
 
-import java.util.List;
-
 public class PlayCardRequest extends Request{
 
     private final String cardId;

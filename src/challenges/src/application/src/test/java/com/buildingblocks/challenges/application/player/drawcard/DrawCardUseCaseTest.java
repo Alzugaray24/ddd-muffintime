@@ -1,5 +1,5 @@
 // DrawCardUseCaseTest.java
-package com.buildingblocks.challenges.application.drawcard;
+package com.buildingblocks.challenges.application.player.drawcard;
 
 import com.buildingblocks.challenges.application.player.drawcard.DrawCardRequest;
 import com.buildingblocks.challenges.application.player.drawcard.DrawCardUseCase;
