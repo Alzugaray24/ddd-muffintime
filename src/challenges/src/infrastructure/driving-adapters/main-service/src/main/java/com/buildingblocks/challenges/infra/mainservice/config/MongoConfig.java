@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
 
 @Configuration
-@EntityScan(basePackages = "com.buildingblocks.challenges.infra.mongo.entities")
-@EnableReactiveMongoRepositories(basePackages = "com.buildingblocks.challenges.infra.mongo.repositories")
+@EntityScan(basePackages = "com.buildingblocks.infra.mongo.entities")
+@EnableReactiveMongoRepositories(basePackages = "com.buildingblocks.infra.mongo.repositories")
 public class MongoConfig {
     @Bean
     public MongoAdapter mongoAdapter(IEventsRepository eventsRepository) {

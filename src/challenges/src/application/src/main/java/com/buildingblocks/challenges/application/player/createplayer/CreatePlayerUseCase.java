@@ -17,14 +17,10 @@ public class CreatePlayerUseCase implements ICommandUseCase<CreatePlayerRequest,
 
     @Override
         public Mono<PlayerResponse> execute(CreatePlayerRequest request) {
-        return eventRepository.findEventsByAggregateId(request.getAggregateId())
-                .collectList()
-                .map(events -> {
-                    Player player = Player.from(request.getAggregateId(), events);
+                    Player player = new Player(request.getNickname());
                     player.createPlayer(request.getNickname());
                     player.getUncommittedEvents().forEach(eventRepository::save);
                     player.markEventsAsCommitted();
-                    return PlayerMapper.toResponse(player);
-                });
+                    return  Mono.just(PlayerMapper.toResponse(player));
+                }
         }
-}

@@ -4,11 +4,15 @@ import com.buildingblocks.shared.application.Request;
 
 public class CreatePlayerRequest extends Request {
 
-    private final String nickname;
+    private String nickname;
 
-    public CreatePlayerRequest(String aggregateId, String nickname) {
-        super(aggregateId);
+    public CreatePlayerRequest(String nickname) {
+        super(null);
         this.nickname = nickname;
+    }
+
+    public CreatePlayerRequest() {
+        super(null);
     }
 
     public String getNickname() {

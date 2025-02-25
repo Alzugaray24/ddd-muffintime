@@ -34,7 +34,7 @@ public class PlayerHandler extends DomainActionsContainer {
         return (DomainEvent event) -> {
             if (event instanceof PlayerCreated playerCreated) {
                 player.setNickName(NickName.of(playerCreated.getNickName()));
-                player.setState(State.of(StateEnum.INACTIVE));
+                player.setState(State.of(StateEnum.ACTIVE));
                 player.setActionHistory(new ActionHistory(new ArrayList<>(), LocalDateTime.now()));
                 player.setTurn(new Turn(LocalTime.now(), null));
             }
