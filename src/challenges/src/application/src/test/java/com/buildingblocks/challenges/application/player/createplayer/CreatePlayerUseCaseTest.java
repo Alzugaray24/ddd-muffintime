@@ -1,9 +1,7 @@
 package com.buildingblocks.challenges.application.player.createplayer;
 
-import com.buildingblocks.challenges.application.player.createplayer.CreatePlayerRequest;
-import com.buildingblocks.challenges.application.player.createplayer.CreatePlayerUseCase;
-import com.buildingblocks.challenges.application.shared.IEventRepository;
-import com.buildingblocks.challenges.application.shared.PlayerResponse;
+import com.buildingblocks.challenges.application.shared.ports.IEventRepositoryPort;
+import com.buildingblocks.challenges.application.player.shared.PlayerResponse;
 import com.buildingblocks.challenges.domain.player.events.PlayerCreated;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -19,10 +17,10 @@ import static org.mockito.Mockito.when;
 class CreatePlayerUseCaseTest {
 
     private final CreatePlayerUseCase useCase;
-    private final IEventRepository eventRepository;
+    private final IEventRepositoryPort eventRepository;
 
     public CreatePlayerUseCaseTest() {
-        eventRepository = Mockito.mock(IEventRepository.class);
+        eventRepository = Mockito.mock(IEventRepositoryPort.class);
         this.useCase = new CreatePlayerUseCase(eventRepository);
     }
 

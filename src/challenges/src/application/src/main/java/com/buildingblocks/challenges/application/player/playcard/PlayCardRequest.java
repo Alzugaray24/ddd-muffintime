@@ -26,10 +26,6 @@ public class PlayCardRequest extends Request{
         return action;
     }
 
-    public String getPlayerId() {
-        return playerId;
-    }
-
     public String getNickname() {
         return nickname;
     }

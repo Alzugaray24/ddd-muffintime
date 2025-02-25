@@ -1,11 +1,10 @@
 // PlayCardUseCaseTest.java
 package com.buildingblocks.challenges.application.player.playcard;
 
-import com.buildingblocks.challenges.application.shared.IEventRepository;
-import com.buildingblocks.challenges.application.shared.PlayerResponse;
+import com.buildingblocks.challenges.application.shared.ports.IEventRepositoryPort;
+import com.buildingblocks.challenges.application.player.shared.PlayerResponse;
 import com.buildingblocks.challenges.domain.player.events.CardPlayed;
 import com.buildingblocks.challenges.domain.player.events.PlayerCreated;
-import com.buildingblocks.challenges.domain.player.values.NickName;
 import com.buildingblocks.shared.domain.generic.DomainEvent;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -20,7 +19,7 @@ import static org.mockito.Mockito.when;
 
 class PlayCardUseCaseTest {
 
-    private final IEventRepository eventRepository = Mockito.mock(IEventRepository.class);
+    private final IEventRepositoryPort eventRepository = Mockito.mock(IEventRepositoryPort.class);
     private final PlayCardUseCase useCase = new PlayCardUseCase(eventRepository);
 
     @Test

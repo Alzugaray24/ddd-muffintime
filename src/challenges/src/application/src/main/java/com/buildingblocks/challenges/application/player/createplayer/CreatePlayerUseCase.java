@@ -1,17 +1,17 @@
 package com.buildingblocks.challenges.application.player.createplayer;
 
-import com.buildingblocks.challenges.application.shared.IEventRepository;
-import com.buildingblocks.challenges.application.shared.PlayerMapper;
-import com.buildingblocks.challenges.application.shared.PlayerResponse;
+import com.buildingblocks.challenges.application.shared.ports.IEventRepositoryPort;
+import com.buildingblocks.challenges.application.player.shared.PlayerMapper;
+import com.buildingblocks.challenges.application.player.shared.PlayerResponse;
 import com.buildingblocks.challenges.domain.player.Player;
 import com.buildingblocks.shared.application.ICommandUseCase;
 import reactor.core.publisher.Mono;
 
 public class CreatePlayerUseCase implements ICommandUseCase<CreatePlayerRequest, Mono<PlayerResponse>> {
 
-    private final IEventRepository eventRepository;
+    private final IEventRepositoryPort eventRepository;
 
-    public CreatePlayerUseCase(IEventRepository eventRepository) {
+    public CreatePlayerUseCase(IEventRepositoryPort eventRepository) {
         this.eventRepository = eventRepository;
     }
 
@@ -23,6 +23,7 @@ public class CreatePlayerUseCase implements ICommandUseCase<CreatePlayerRequest,
                     Player player = Player.from(request.getAggregateId(), events);
                     player.createPlayer(request.getNickname());
                     player.getUncommittedEvents().forEach(eventRepository::save);
+                    player.markEventsAsCommitted();
                     return PlayerMapper.toResponse(player);
                 });
         }

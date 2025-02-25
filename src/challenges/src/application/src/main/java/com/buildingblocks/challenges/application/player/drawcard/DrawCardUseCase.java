@@ -1,19 +1,18 @@
 // DrawCardUseCase.java
 package com.buildingblocks.challenges.application.player.drawcard;
 
-import com.buildingblocks.challenges.application.shared.IEventRepository;
-import com.buildingblocks.challenges.application.shared.PlayerMapper;
-import com.buildingblocks.challenges.application.shared.PlayerResponse;
+import com.buildingblocks.challenges.application.shared.ports.IEventRepositoryPort;
+import com.buildingblocks.challenges.application.player.shared.PlayerMapper;
+import com.buildingblocks.challenges.application.player.shared.PlayerResponse;
 import com.buildingblocks.challenges.domain.player.Player;
-import com.buildingblocks.challenges.domain.player.values.NickName;
 import com.buildingblocks.shared.application.ICommandUseCase;
 import reactor.core.publisher.Mono;
 
 public class DrawCardUseCase implements ICommandUseCase<DrawCardRequest, Mono<PlayerResponse>> {
 
-    private final IEventRepository eventRepository;
+    private final IEventRepositoryPort eventRepository;
 
-    public DrawCardUseCase(IEventRepository eventRepository) {
+    public DrawCardUseCase(IEventRepositoryPort eventRepository) {
         this.eventRepository = eventRepository;
     }
 
@@ -23,11 +22,9 @@ public class DrawCardUseCase implements ICommandUseCase<DrawCardRequest, Mono<Pl
                 .collectList()
                 .map(events -> {
                     Player player = Player.from(request.getAggregateId(), events);
-                    if (player.getNickName() == null) {
-                        player.setNickName(NickName.of(request.getNickname()));
-                    }
                     player.drawnCard(request.getCardId());
                     player.getUncommittedEvents().forEach(eventRepository::save);
+                    player.markEventsAsCommitted();
                     return PlayerMapper.toResponse(player);
                 });
     }
