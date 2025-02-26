@@ -3,13 +3,11 @@ package com.buildingblocks.challenges.application.player.drawcard;
 import com.buildingblocks.shared.application.Request;
 
 public class DrawCardRequest extends Request {
-    private final String cardId;
-    private final String nickname;
+    private String cardId;
 
-    public DrawCardRequest(String aggregateId, String cardId, String nickname) {
+    public DrawCardRequest(String aggregateId, String cardId) {
         super(aggregateId);
         this.cardId = cardId;
-        this.nickname = nickname;
 
     }
 
@@ -17,7 +15,4 @@ public class DrawCardRequest extends Request {
         return cardId;
     }
 
-    public String getNickname() {
-        return nickname;
-    }
 }

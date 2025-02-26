@@ -35,6 +35,7 @@ public class PlayerHandler extends DomainActionsContainer {
             if (event instanceof PlayerCreated playerCreated) {
                 player.setNickName(NickName.of(playerCreated.getNickName()));
                 player.setState(State.of(StateEnum.ACTIVE));
+                player.createInitialCards();
                 player.setActionHistory(new ActionHistory(new ArrayList<>(), LocalDateTime.now()));
                 player.setTurn(new Turn(LocalTime.now(), null));
             }
@@ -52,9 +53,9 @@ public class PlayerHandler extends DomainActionsContainer {
     private Consumer<? super DomainEvent> playCard(Player player) {
         return (DomainEvent event) -> {
             if (event instanceof CardPlayed cardPlayed) {
-                    player.getCards().remove(cardPlayed.getCardId());
-                    player.getActionHistory().addAction(Action.of(cardPlayed.getCardId()));
-                    player.getTurn().finalizeTurn();
+                player.getCards().removeIf(card -> card.getId().toString().equals(cardPlayed.getCardId()));
+                player.getActionHistory().addAction(Action.of(cardPlayed.getCardId()));
+                player.getTurn().finalizeTurn();
             }
         };
     }

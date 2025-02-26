@@ -93,6 +93,10 @@ public class Player extends AggregateRoot<PlayerId> {
         this.turn = turn;
     }
 
+    public String getNickNameValue() {
+        return this.nickName.getValue();
+    }
+
     // endregion
 
     // region Domain Events
@@ -105,8 +109,8 @@ public class Player extends AggregateRoot<PlayerId> {
         apply(new CardDrawn(cardId));
     }
 
-    public void playCard(String  cardId, String action) {
-        apply(new CardPlayed(cardId, action));
+    public void playCard(String  cardId) {
+        apply(new CardPlayed(cardId));
     }
 
     public void changeState(String state) {
@@ -117,6 +121,13 @@ public class Player extends AggregateRoot<PlayerId> {
 
     // region Public methods
 
+    public void createInitialCards() {
+        for (int i = 0; i < 5; i++) {
+            Card card = new Card();
+            this.cards.add(card);
+        }
+    }
+
     // endregion
 
     // region Private methods
@@ -126,6 +137,8 @@ public class Player extends AggregateRoot<PlayerId> {
     public static Player from(final String identity, final List<DomainEvent> events) {
         Player player = new Player(PlayerId.of(identity));
         events.forEach(player::apply);
+        player.markEventsAsCommitted();
         return player;
     }
+
 }

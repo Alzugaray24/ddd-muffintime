@@ -6,7 +6,9 @@ public class PlayerMapper {
 
     public static PlayerResponse toResponse(Player player) {
         return new PlayerResponse(
-                player.getIdentity().getValue()
+                player.getIdentity().getValue(),
+                player.getNickNameValue(),
+                player.getCards()
         );
     }
 }

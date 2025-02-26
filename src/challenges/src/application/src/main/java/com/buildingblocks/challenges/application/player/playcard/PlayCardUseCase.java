@@ -22,7 +22,7 @@ public class PlayCardUseCase implements ICommandUseCase<PlayCardRequest, Mono<Pl
                 .collectList()
                 .map(events -> {
                     Player player = Player.from(request.getAggregateId(), events);
-                    player.playCard(request.getCardId(), request.getAction());
+                    player.playCard(request.getCardId());
                     player.getUncommittedEvents().forEach(eventRepository::save);
                     player.markEventsAsCommitted();
                     return PlayerMapper.toResponse(player);

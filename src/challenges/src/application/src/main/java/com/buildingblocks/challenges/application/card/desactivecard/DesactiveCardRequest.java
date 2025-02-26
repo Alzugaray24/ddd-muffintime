@@ -4,7 +4,7 @@ import com.buildingblocks.shared.application.Request;
 
 public class DesactiveCardRequest extends Request {
 
-    private final String cardId;
+    private String cardId;
 
     public DesactiveCardRequest(String aggregateId, String cardId) {
         super(aggregateId);

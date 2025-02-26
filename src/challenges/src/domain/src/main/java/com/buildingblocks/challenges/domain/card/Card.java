@@ -16,8 +16,6 @@ import java.util.List;
 
 public class Card extends AggregateRoot<CardId> {
 
-    private Title title;
-    private Description description;
     private Type type;
     private IsActive active;
     private Effect effect;
@@ -69,7 +67,12 @@ public class Card extends AggregateRoot<CardId> {
     public static Card from(final String identity, final List<DomainEvent> events) {
         Card card = new Card(CardId.of(identity));
         events.forEach(card::apply);
+        card.markEventsAsCommitted();
         return card;
+    }
+
+    public Boolean getId() {
+        return true;
     }
 
     // endregion

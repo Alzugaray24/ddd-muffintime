@@ -4,7 +4,7 @@ import com.buildingblocks.shared.application.Request;
 
 public class ActiveCardRequest extends Request {
 
-    private final String cardId;
+    private String cardId;
 
     public ActiveCardRequest(String aggregateId, String cardId) {
         super(aggregateId);
